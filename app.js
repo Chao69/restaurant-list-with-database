@@ -26,6 +26,11 @@ app.use(express.static("public"))
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.listen(3000, () => {
+  console.log('Express is running on http://localhost:3000')
+})
+
+// define home page
 app.get('/', (req, res) => {
   Restaurant.find()
     .lean()
@@ -33,10 +38,10 @@ app.get('/', (req, res) => {
     .catch(error => console.error(error))
 })
 
+// add new restaurant
 app.get('/restaurants/add', (req, res) => {
   res.render('add')
 })
-
 app.post('/restaurants', (req, res) => {
   const name = req.body.name
   const name_en = req.body.name_en
@@ -47,12 +52,54 @@ app.post('/restaurants', (req, res) => {
   const google_map = req.body.google_map
   const rating = req.body.rating
   const description = req.body.description
-  
+
   return Restaurant.create({ name, name_en, category, image, location, phone, google_map, rating, description })
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
 
-app.listen(3000, () => {
-  console.log('Express is running on http://localhost:3000')
+// view restaurant detail
+app.get('/restaurants/:id', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .lean()
+    .then(restaurant => res.render('show', { restaurant }))
+    .catch(error => console.log(error))
+})
+
+// edit restaurant info
+app.get('/restaurants/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .lean()
+    .then(restaurant => res.render('edit', { restaurant }))
+    .catch(error => console.log(error))
+})
+
+app.post('/restaurants/:id/edit', (req, res) => {
+  const id = req.params.id
+  const name = req.body.name
+  const name_en = req.body.name_en
+  const category = req.body.category
+  const image = req.body.image
+  const location = req.body.location
+  const phone = req.body.phone
+  const google_map = req.body.google_map
+  const rating = req.body.rating
+  const description = req.body.description
+  return Restaurant.findById(id)
+    .then(restaurant => {
+      restaurant.name = name
+      restaurant.name_en = name_en
+      restaurant.category = category
+      restaurant.image = image
+      restaurant.location = location
+      restaurant.phone = phone
+      restaurant.google_map = google_map
+      restaurant.rating = rating
+      restaurant.description = description
+      return restaurant.save()
+    })
+    .then(() => res.redirect(`/restaurants/${id}`))
+    .catch(error => console.log(error))
 })
