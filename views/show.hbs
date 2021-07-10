@@ -38,8 +38,9 @@
 
       <img class="rounded mx-auto d-block mb-4 w-100" src="{{ restaurant.image }}" alt="{{ restaurant.name}}"
         style="max-width: 600px;">
-      <div class="d-flex justify-content-center">
-        <a class="btn btn-major" href="/" role="button">Back</a>
+      <div class="d-flex justify-content-around">
+        <a class="btn btn-major " href="/" role="button">Back</a>
+        <a class="btn btn-major " href="/restaurants/{{ restaurant._id }}/edit" role="button">edit</a>
       </div>
 
     </div>
