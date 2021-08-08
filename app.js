@@ -7,6 +7,10 @@ const session = require('express-session')
 const usePassport = require('./config/passport')
 const flash = require('connect-flash')
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const app = express()
 const routes = require('./routes')
 
@@ -17,7 +21,7 @@ app.set('view engine', 'hbs')
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
-  secret: 'ThisIsMySecret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))
