@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const User = require('../../models/user')
 const passport = require('passport')
+const bcrypt = require('bcryptjs')
 
 // login router
 router.get('/login', (req, res) => {
@@ -16,6 +17,7 @@ router.post('/login', passport.authenticate('local', {
 // logout router
 router.get('/logout', (req, res) => {
   req.logout()
+  req.flash('success_msg', '你已經成功登出。')
   res.redirect('/users/login')
 })
 
@@ -26,6 +28,22 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
+  const errors = []
+  if (!name || !email || !password || !confirmPassword) {
+    errors.push({ message: '所有欄位都是必填！'})
+  }
+  if (password !== confirmPassword) {
+    errors.push({ message: '密碼與確認密碼不相符！'})
+  }
+  if (errors.length) {
+    return res.render('register', {
+      errors,
+      name,
+      email,
+      password,
+      confirmPassword
+    })
+  }
   // 透過email找資料庫使否有重複的email
   User.findOne({ email })
     .then(user => {
@@ -41,13 +59,16 @@ router.post('/register', (req, res) => {
         })
       } else {
         // 若無重複，則在DB新增一筆使用者資料
-        return User.create({
-          name,
-          email,
-          password
-        })
-        .then(() => res.redirect('/'))
-        .catch(error => console.error(error))
+        return bcrypt
+          .genSalt(10)
+          .then(salt => bcrypt.hash('password', salt))
+          .then(hash => User.create({
+            name,
+            email,
+            password: hash
+          }))
+          .then(() => res.redirect('/'))
+          .catch(error => console.error(error))
       }
     })
 })
