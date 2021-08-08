@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const Restaurant = require('./models/restaurant')
 const methodOverride = require('method-override')
 const session = require('express-session')
+const usePassport = require('./config/passport')
 
 const app = express()
 const routes = require('./routes')
@@ -23,6 +24,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
+
+usePassport(app)
 
 app.use(methodOverride('_method'))
 
