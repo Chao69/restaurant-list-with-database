@@ -20,6 +20,14 @@
 - 新增了修改餐廳的資訊功能
 - 新增了刪除餐廳功能
 * 可與前一份restaurant-list專案做對比 https://github.com/Chao69/restaurant_list
+## 2021/08/08 新增功能
+- 新增權限功能，為登入不得瀏覽餐廳清單
+- 可透過Register申請使用權
+- 可透過件裡好的體驗用戶做登入
+- 1 email: user1@example.com password: 12345678
+- 2 email: user2@example.com password: 12345678
+- 可透過FaceBook做第三方登入
+- 後台用戶密碼已做雜湊處理，保護用戶私密資料
 ## 編程環境
 * Node.js v10.24.1
 ## 使用框架及套件
