@@ -1,19 +1,4 @@
-{{!-- search bar --}}
 <div class="container search-bar">
-  <div class="d-flex justify-content-end">
-    <div class="btn-group">
-      <button type="button" class="btn btn-major dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        排序方式
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <div class="dropdown-item disabled">評分排序:</div>
-        <a class="dropdown-item" href="/?order=desc&sortBy=rating">由高到低</a>
-        <a class="dropdown-item" href="/?order=asc&sortBy=rating">由低到高</a>
-        <a class="dropdown-item" href="/?order=asc&sortBy=name">A->Z</a>
-        <a class="dropdown-item" href="/?order=desc&sortBy=name">Z->A</a>
-      </div>
-    </div>
-  </div>
   <div class="search-bar-outer">
     <div class="search-bar-inner">
       <form action="/restaurants/search" method="GET">
@@ -36,10 +21,10 @@
 
 
 {{!-- restaurant list --}}
-<div class="container d-flex justify-content-evenly mt-3">
-  <div class="row row-cols-3">
+<div class="container">
+  <div class="row row-cols-md-4">
     {{#each restaurants}}
-    <div class="col">
+    <div class="col-4">
       <a class="text-secondary">
         <div class="card mb-3">
           <img class="card-img-top" src="{{ this.image }}" alt="{{ this.name }}">

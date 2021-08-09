@@ -24,9 +24,7 @@ router.get('/search', (req, res) => {
   Restaurant.find({ userId })
     .lean()
     .then(restaurants => {
-      console.log(userId)
-      console.log(restaurants)
-      const restaurantList = restaurants.filter(restaurant => restaurant.name.toLowerCase().includes(keyword))
+      const restaurantList = restaurants.filter(restaurant => restaurant.name.toLowerCase().includes(keyword.toLocaleLowerCase()))
       if (restaurantList.length === 0) {
         res.render('index', { restaurants: restaurantList, keyword: keyword, alert: `<h1 class="display-5 mt-5 text-info text-center">No results.</h1>` })
       } else {
