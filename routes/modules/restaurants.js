@@ -21,14 +21,16 @@ router.post('/', (req, res) => {
 router.get('/search', (req, res) => {
   const keyword = req.query.keyword
   const userId = req.user._id
-  Restaurant.findOne({ userId })
+  Restaurant.find({ userId })
     .lean()
     .then(restaurants => {
-      restaurants = restaurants.filter(restaurant => restaurant.name.toLowerCase().includes(keyword))
-      if (restaurants.length === 0) {
-        res.render('index', { restaurants: restaurants, keyword: keyword, alert: `<h1 class="display-5 mt-5 text-info text-center">No results.</h1>` })
+      console.log(userId)
+      console.log(restaurants)
+      const restaurantList = restaurants.filter(restaurant => restaurant.name.toLowerCase().includes(keyword))
+      if (restaurantList.length === 0) {
+        res.render('index', { restaurants: restaurantList, keyword: keyword, alert: `<h1 class="display-5 mt-5 text-info text-center">No results.</h1>` })
       } else {
-        res.render('index', { restaurants: restaurants, keyword: keyword })
+        res.render('index', { restaurants: restaurantList, keyword: keyword })
       }
     })
     .catch(error => console.error(error))
