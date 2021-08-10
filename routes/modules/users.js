@@ -29,8 +29,8 @@ router.get('/register', (req, res) => {
 router.post('/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
   const errors = []
-  if (!name || !email || !password || !confirmPassword) {
-    errors.push({ message: '所有欄位都是必填！' })
+  if (!email || !password || !confirmPassword) {
+    errors.push({ message: 'email/password/Confirm Password欄位為必填！' })
   }
   if (password !== confirmPassword) {
     errors.push({ message: '密碼與確認密碼不相符！' })
@@ -49,26 +49,29 @@ router.post('/register', (req, res) => {
     .then(user => {
       // 若有重複，則無法註冊
       if (user) {
+        const emailConfirm = 'This email was registered'
         console.log('User already exists.')
         // 將使用者輸入的資料回傳至register page保留
         res.render('register', {
           name,
           email,
           password,
-          confirmPassword
+          confirmPassword,
+          emailConfirm
         })
+      } else {
+        // 若無重複，則在DB新增一筆使用者資料
+        return bcrypt
+          .genSalt(10)
+          .then(salt => bcrypt.hash(password, salt))
+          .then(hash => User.create({
+            name,
+            email,
+            password: hash
+          }))
+          .then(() => res.redirect('/'))
+          .catch(error => console.error(error))
       }
-      // 若無重複，則在DB新增一筆使用者資料
-      return bcrypt
-        .genSalt(10)
-        .then(salt => bcrypt.hash(password, salt))
-        .then(hash => User.create({
-          name,
-          email,
-          password: hash
-        }))
-        .then(() => res.redirect('/'))
-        .catch(error => console.error(error))
     })
 })
 
