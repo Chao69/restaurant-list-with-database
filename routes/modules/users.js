@@ -49,7 +49,7 @@ router.post('/register', (req, res) => {
     .then(user => {
       // 若有重複，則無法註冊
       if (user) {
-        const emailConfirm = '此email已註冊過'
+        errors.push({ message: '此email已註冊過' })
         console.log('User already exists.')
         // 將使用者輸入的資料回傳至register page保留
         res.render('register', {
@@ -57,7 +57,7 @@ router.post('/register', (req, res) => {
           email,
           password,
           confirmPassword,
-          emailConfirm
+          errors
         })
       } else {
         // 若無重複，則在DB新增一筆使用者資料
